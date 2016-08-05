@@ -14,18 +14,60 @@ module.exports.bootstrap = function (cb) {
   // It's very important to trigger this callback method when you are finished
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
   Pet.create({
-    id: 10,
-    name: 'pnk',
+      id: 1,
+      name: 'pnk',
+    })
+    .then(function (pet) {
+      User.create({
+          id: 1,
+          name: 'Yuk',
+        })
+        .exec(function (err, user) {
+          console.log(user);
+          pet.owners.add(1);
+          console.log(pet);
+          pet.save(function () {
+            Pet.find({
+              name: 'pnk',
+            }).populate('owners').exec(console.log)
+
+          });
+        });
+    })
+    .then(
+      function () {
+        User.findOne(1).exec(function (err, result) {
+          console.log('=============');
+          console.log(err, result);
+        });
+      });
+
+  Role.create({
+    id: 1,
+    name: '管理员组',
   }).exec(function (err, pet) {
-    console.log(err, pet);
-    User.create({
-      id: 10,
+    SysUser.create({
+      id: 1,
       name: 'mike',
     }).exec(function (err, user) {
-      console.log(err, user)
-      user.pets.add([10]);
-      user.save();
+      user.oauth.add(1);
+      user.save(function (err, result) {
+        SysUser.find({
+          name: 'mike'
+        }).populate('oauth').exec(function (err, res) {
+          console.log(err, res);
+        });
+      });
+    });
+
+    SysPermission.create({
+      id: 1,
+      name: '读写权限',
+    }).exec(function (err, permissions) {
+      permissions.owners.add(1);
+      permissions.save(console.log);
     });
   });
+
   cb();
 };

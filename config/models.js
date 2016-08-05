@@ -19,8 +19,10 @@ module.exports.models = {
    ***************************************************************************/
   // connection: 'localDiskDb',
   connection: 'someMysqlServer',
-  autoCreatedAt: true,
-  autoUpdatedAt: true,
+  autoCreatedAt: false,
+  autoUpdatedAt: false,
+  // primaryKey: false,
+  // autoPK: false,
   schema: true,
   /***************************************************************************
    *                                                                          *

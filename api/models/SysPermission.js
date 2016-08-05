@@ -1,11 +1,12 @@
 /**
- * Pet.js
+ * SysPermission.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
 module.exports = {
+
   attributes: {
     id: {
       type: 'integer',
@@ -15,13 +16,10 @@ module.exports = {
     name: {
       type: 'string'
     },
-    color: {
-      type: 'string'
-    },
     owners: {
-      collection: 'user',
-      via: 'pet',
-      through: 'petuser'
+      collection: 'Role',
+      via: 'permissions',
+      // through: 'PetUser'
     },
   }
-}
+};

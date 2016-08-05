@@ -5,17 +5,19 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 module.exports = {
-
   attributes: {
-    firstName: 'string',
-    lastName: 'string',
-
-    // Add a reference to Pet
+    id: {
+      type: 'integer',
+      unique: true,
+      primaryKey: true,
+    },
+    name: {
+      type: 'string'
+    },
     pets: {
       collection: 'pet',
-      via: 'owners',
-      dominant: true
+      via: 'owner',
+      through: 'petuser'
     }
   }
-
 }
