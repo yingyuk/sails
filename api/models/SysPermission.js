@@ -16,10 +16,10 @@ module.exports = {
     name: {
       type: 'string'
     },
-    owners: {
-      collection: 'Role',
-      via: 'permissions',
-      // through: 'PetUser'
-    },
+    // owners: {
+    //   collection: 'Role',
+    //   via: 'permissions',
+    //   // through: 'PetUser'
+    // },
   }
 };

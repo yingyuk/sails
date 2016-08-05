@@ -6,18 +6,10 @@
  */
 
 module.exports = {
-  // identity: 'pet_user',
-  // tableName: 'pet_user',
+  tableName: 'pet_user',
   autoPK: false,
   attributes: {
-    // autoPK: false,
-    // autoCreatedAt: false,
-    // autoUpdatedAt: false,
-    // id: {
-    //   type: 'integer',
-    //   unique: true,
-    //   primaryKey: true,
-    // },
+
     owner: {
       model: 'user'
     },

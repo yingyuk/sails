@@ -13,18 +13,17 @@ module.exports.bootstrap = function (cb) {
 
   // It's very important to trigger this callback method when you are finished
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
+
   Pet.create({
-      id: 1,
       name: 'pnk',
     })
     .then(function (pet) {
       User.create({
-          id: 1,
           name: 'Yuk',
         })
         .exec(function (err, user) {
           console.log(user);
-          pet.owners.add(1);
+          pet.owners.add(pet.id);
           console.log(pet);
           pet.save(function () {
             Pet.find({
@@ -33,41 +32,39 @@ module.exports.bootstrap = function (cb) {
 
           });
         });
-    })
-    .then(
-      function () {
-        User.findOne(1).exec(function (err, result) {
-          console.log('=============');
-          console.log(err, result);
-        });
-      });
-
-  Role.create({
-    id: 1,
-    name: '管理员组',
-  }).exec(function (err, pet) {
-    SysUser.create({
-      id: 1,
-      name: 'mike',
-    }).exec(function (err, user) {
-      user.oauth.add(1);
-      user.save(function (err, result) {
-        SysUser.find({
-          name: 'mike'
-        }).populate('oauth').exec(function (err, res) {
-          console.log(err, res);
-        });
-      });
     });
 
-    SysPermission.create({
-      id: 1,
-      name: '读写权限',
-    }).exec(function (err, permissions) {
-      permissions.owners.add(1);
-      permissions.save(console.log);
-    });
-  });
+  // Role.create({
+  //   id: 1,
+  //   name: '管理员组',
+  // }).exec(function (err, role) {
+  //   SysUser.create({
+  //     id: 1,
+  //     name: 'mike',
+  //   }).exec(function (err, user) {
+  //     role.oauth.add(1);
+  //     role.save(console.log);
+  //     console.log(role);
+  //     console.log(user);
+  //     // user.member.add(1);
+  //     // user.save(console.log);
+  //     console.log(err, user);
+  //     // user.save(function (err, result) {
+  //     //   console.log(err, result);
+  //     //   SysUser.find({
+  //     //     name: 'mike'
+  //     //   }).populate('member').exec(console.log);
+  //     // });
+  //   });
+
+  // });
+  // SysPermission.create({
+  //   id: 1,
+  //   name: '读写权限',
+  // }).exec(function (err, permissions) {
+  //   permissions.owners.add(1);
+  //   permissions.save(console.log);
+  // });
 
   cb();
 };

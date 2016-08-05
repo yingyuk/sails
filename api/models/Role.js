@@ -6,24 +6,22 @@
  */
 
 module.exports = {
-  id: {
-    type: 'integer',
-    unique: true,
-    primaryKey: true,
-  },
   attributes: {
+    id: {
+      type: 'integer',
+      unique: true,
+      primaryKey: true,
+    },
     name: {
-      type: 'string',
+      type: 'string'
     },
-    member: {
-      collection: 'SysUser',
+    color: {
+      type: 'string'
+    },
+    oauth: {
+      collection: 'sysuser',
       via: 'oauth',
-      dominant: true,
+      through: 'sysuserrole'
     },
-    permissions: {
-      collection: 'SysPermission',
-      via: 'owners',
-      dominant: true,
-    },
-  },
-};
+  }
+}
