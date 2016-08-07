@@ -10,11 +10,11 @@
   <form action="/createUser" method="post">
   <input type="hidden" name="createUid" value="<%= user.id %>">
     <label for="name">账号: <br>
-      <input type="text" name="name" value="root">
+      <input type="text" name="name" value="" placeholder="不重名的账号">
     </label>
     <br>
     <label for="name">密码: <br>
-      <input type="password" name="password" value="" required="">
+      <input type="password" name="password" value="" required="" placeholder="最少6位">
     </label>
     <br>
     <label for="role">分组:

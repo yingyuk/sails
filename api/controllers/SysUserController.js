@@ -4,7 +4,7 @@
  * @Email:  wuyingyucn@gmail.com
  * @Date:   2016-08-04 23:42:12
  * @Last Modified by:   yingyuk
- * @Last Modified time: 2016-08-07 16:07:16
+ * @Last Modified time: 2016-08-07 20:16:26
  * @Description:
  */
 'use strict';
@@ -22,6 +22,8 @@ module.exports = {
       let data = {
         user: req.session.user,
         roles: [],
+        menus: [],
+        permissions: [],
       };
       SysUser.findOne({
           id: userId,
@@ -42,7 +44,23 @@ module.exports = {
           Role.find(condition).exec(function (err, roles) {
             data.roles = roles;
             sails.log(data);
+            user.fetchOauth(function (err, result) {
+              if (err) {
+                return res.negotiate(err);
+              }
+
+              data.menus = result.menus.map(function (item) {
+                if (item.name) {
+                  return item;
+                }
+              });
+              data.permissions = result.permissions.map(function (item) {
+                if (item.name) {
+                  return item;
+                }
+              });
             res.view('create/sysuser', data);
+            });
           });
 
         });
@@ -90,15 +108,19 @@ module.exports = {
           }
 
           let data = {
-            name: result.user.name,
+            user: user,
             menus: [],
             permissions: [],
           };
           data.menus = result.menus.map(function (item) {
-            return item.name;
+            if (item.name) {
+              return item;
+            }
           });
           data.permissions = result.permissions.map(function (item) {
-            return item.name;
+            if (item.name) {
+              return item;
+            }
           });
           res.view('homepage', data);
         });

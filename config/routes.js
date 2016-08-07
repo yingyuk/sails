@@ -36,9 +36,18 @@ module.exports.routes = {
     controller: 'SysUserController',
     action: 'sideBar',
   },
-  'get /login': {
-    view: 'login/register',
+  'get /login': function (req, res) {
+    res.view('login/register', {
+      layout: 'empty',
+      user:'',
+    });
   },
+  // 'get /login': {
+  //   view: 'login/register',
+  //   locals: {
+  //     layout: ''
+  //   }
+  // },
   'post /login': 'AuthController.processLogin',
   '/logout': {
     controller: 'AuthController',
