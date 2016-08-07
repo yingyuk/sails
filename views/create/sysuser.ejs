@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>创建用户</title>
+</head>
+
+<body>
+  <form action="/createUser" method="post">
+  <input type="hidden" name="createUid" value="<%= user.id %>">
+    <label for="name">账号: <br>
+      <input type="text" name="name" value="root">
+    </label>
+    <br>
+    <label for="name">密码: <br>
+      <input type="password" name="password" value="" required="">
+    </label>
+    <br>
+    <label for="role">分组:
+    <br>
+      <select name="role">
+      <% for(var i in roles){ %>
+        <option value ="<%= roles[i].id %>"><%= roles[i].name %></option>
+        <% } %>
+      </select>
+    </label>
+<br>
+          <button type="submit">提交</button>
+  </form>
+</body>
+
+</html>

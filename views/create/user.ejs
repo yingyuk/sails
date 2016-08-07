@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>创建用户</title>
+</head>
+
+<body>
+  <form action="/createUser" method="post">
+  <input type="hidden" name="createUid" value="<%= user.id %>">
+    <label for="name">账号: <br>
+      <input type="text" name="name" value="root">
+    </label>
+    <br>
+    <label for="name">密码: <br>
+      <input type="password" name="password" value="" required="">
+    </label>
+          <button type="submit">提交</button>
+  </form>
+</body>
+
+</html>

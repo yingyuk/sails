@@ -1,7 +1,7 @@
 /**
- * SysUserRoleController
+ * MenuController
  *
- * @description :: Server-side logic for managing sysuserroles
+ * @description :: Server-side logic for managing menus
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 

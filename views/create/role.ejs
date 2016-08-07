@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>创建用户</title>
+</head>
+
+<body>
+  <form action="/createRole" method="post">
+  <input type="hidden" name="createUid" value="<%= user.id %>">
+    <label for="name">分组名:
+      <input type="text" name="name" value="普通管理员">
+    </label>
+    <br> 权限:
+    <br>
+    <% for( var i=0;i < permissions.length; i++){ %>
+      <label>
+        <input name="permissions" type="checkbox" value="<%= permissions[i].id %>" />
+        <%= permissions[i].name %>
+      </label>
+      <% } %>
+        <br> 菜单:
+        <br>
+        <% for( var i=0;i < menus.length; i++){ %>
+          <label>
+            <input name="menus" type="checkbox" value="<%= menus[i].id %>" />
+            <%= menus[i].name %>
+          </label>
+          <% } %>
+          <br>
+          <button type="submit">提交</button>
+  </form>
+</body>
+
+</html>

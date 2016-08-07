@@ -8,18 +8,14 @@
 module.exports = {
 
   attributes: {
-    id: {
-      type: 'integer',
-      unique: true,
-      primaryKey: true,
-    },
     name: {
       type: 'string'
     },
-    // owners: {
-    //   collection: 'Role',
-    //   via: 'permissions',
-    //   // through: 'PetUser'
-    // },
+    owners: {
+      collection: 'role',
+      via: 'permissions',
+      // dominant: true,
+      // through: 'PetUser'
+    },
   }
 };

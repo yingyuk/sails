@@ -1,27 +1,26 @@
 /**
- * Pet.js
+ * Menu.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
 module.exports = {
+
   attributes: {
-    id: {
-      type: 'integer',
-      unique: true,
-      primaryKey: true,
-    },
     name: {
       type: 'string'
     },
-    color: {
-      type: 'string'
+    pid: {
+      type: 'interger',
+      model: 'menu',
+      via: 'id',
     },
     owners: {
-      collection: 'user',
-      via: 'pet',
-      through: 'petuser'
+      collection: 'role',
+      via: 'menus',
+      // dominant: true,
+      // through: 'PetUser'
     },
   }
-}
+};

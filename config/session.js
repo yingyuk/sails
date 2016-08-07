@@ -61,7 +61,11 @@ module.exports.session = {
   // db: 0,
   // pass: <redis auth password>,
   // prefix: 'sess:',
-
+  // url: 'mysql://root:root@host:3306/testsails',
+  // collection: 'sessions',
+  // auto_reconnect: false,
+  // ssl: false,
+  // stringify: true,
 
   /***************************************************************************
    *                                                                          *
