@@ -4,7 +4,7 @@
  * @Email:  wuyingyucn@gmail.com
  * @Date:   2016-08-02 23:34:13
  * @Last Modified by:   yingyuk
- * @Last Modified time: 2016-08-07 15:58:11
+ * @Last Modified time: 2016-08-10 17:48:08
  * @Description:
  */
 'use strict';
@@ -38,6 +38,43 @@ module.exports = {
     createUid: {
       type: 'integer',
     },
+    // 验证是否有这项权限
+    // 例如是否有菜单浏览权利;
+    validatePermission: function (permission, cb) {
+      SysUser.findOne({
+          id: this.id,
+          select: ['id'],
+        })
+        .populate('role')
+        .exec(function (err, user) {
+          if (err) {
+            cb(err);
+          }
+          var roles = user.role.map(function (item) {
+            return item.id;
+          });
+          Role.find({
+              id: roles,
+              select: ['id'],
+            })
+            .populate('permissions')
+            .exec(function (err, permissions) {
+              if (err) {
+                cb(err);
+              }
+              permissions = groupBy('permissions', permissions);
+              sails.log('拥有的权限', permissions);
+              for (let i in permissions) {
+                if (permissions[i].name === permission) {
+                  sails.log('permissions[i].name === permission', permissions[i].name === permission);
+                  return cb(null, true);
+                }
+              }
+              return cb(null, false);
+            });
+        });
+    },
+    // 添加角色
     oauth: function (roleName, cb) {
       Role.findOrCreate({
         name: roleName,
@@ -50,6 +87,40 @@ module.exports = {
         role.save(cb);
       });
     },
+    // 菜单展示
+    fetchMenu: function (cb) {
+      this.validatePermission('菜单浏览', function (err, status) {
+        if (err) {
+          cb(err);
+        }
+        sails.log('权限', status);
+        if (!status) {
+          return [];
+        }
+        SysUser.findOne({
+          id: 1,
+          select: ['id'],
+        }).populate('role').then(function (user) {
+          var roleIds = user.role.map(function (item) {
+            if (item.id) {
+              return item.id;
+            }
+          });
+          Role.find({
+            id: roleIds,
+          }).populate(['menus']).exec(function (err, role) {
+            if (err) {
+              return cb(err);
+            }
+            sails.log('权限', groupBy('menus', role));
+            return cb(null, groupBy('menus', role));
+          });
+        }).catch(function (err) {
+          return cb(err);
+        });
+      });
+    },
+    // 验证密码
     comparePassword: function (_password, cb) {
       bcrypt.compare(_password, this.password, function (err, isMatch) {
         if (err) {
@@ -121,4 +192,20 @@ module.exports = {
       cb();
     });
   },
+};
+
+function groupBy(name, obj) {
+  'use strict';
+  let cache = {};
+  let resultArr = [];
+  for (let i in obj) {
+    for (let j in obj[i][name]) {
+      let id = (obj[i][name][j].id);
+      if (!!id && !cache[id]) {
+        cache[id] = true;
+        resultArr.push((obj[i][name][j]));
+      }
+    }
+  }
+  return resultArr;
 }

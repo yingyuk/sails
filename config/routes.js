@@ -40,6 +40,7 @@ module.exports.routes = {
     res.view('login/register', {
       layout: 'empty',
       user:'',
+      title:'登录页面',
     });
   },
   // 'get /login': {
