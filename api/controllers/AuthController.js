@@ -3,22 +3,22 @@
  * @Author: Yuk
  * @Email:  wuyingyucn@gmail.com
  * @Date:   2016-08-06 21:10:55
- * @Last Modified by:   Yuk
- * @Last Modified time: 2016-08-07 11:12:25
+ * @Last Modified by:   yingyuk
+ * @Last Modified time: 2016-08-11 23:15:30
  * @Description:
  */
 'use strict';
-let passport = require('passport');
 module.exports = {
+  // 暂时把用户,菜单,权限 放在session上
   processLogin: function (req, res) {
-    var _user = req.body.user;
-    var name = _user.name;
-    var password = _user.password;
+    let _user = req.body.user;
+    let name = _user.name;
+    let password = _user.password;
     SysUser.findOne({
-      name: _user.name
+      name: name,
     }, function (err, user) {
       if (err) {
-        sails.log(err);
+        return res.redirect('/login');
       }
 
       if (!user) {
@@ -26,19 +26,26 @@ module.exports = {
       }
       user.comparePassword(password, function (err, isMatch) {
         if (err) {
-          sails.log(err);
+          return res.redirect('/login');
         }
-        sails.log('isMatch',isMatch);
         if (isMatch) {
-          req.session.user = user;
-          sails.log('写入session',req.session.user);
-          return res.redirect('/');
+          req.session.user = {
+            id: user.id,
+            name: user.name,
+          };
+          user.fetchAbility(function (err, ability) {
+            if (err) {
+              return res.redirect('/login');
+            }
+            // 暂时 放到 session上 省的每次去查
+            req.session.ability = ability; // 菜单 和权限
+            return res.redirect('/');
+          });
         } else {
           return res.redirect('/login');
         }
-
       });
-    })
+    });
   },
   logout: function (req, res) {
     req.session.user = null;

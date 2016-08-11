@@ -19,7 +19,7 @@
  * For more information on configuring custom routes, check out:
  * http://sailsjs.org/#!/documentation/concepts/Routes/RouteTargetSyntax.html
  */
-
+'use strict';
 module.exports.routes = {
 
   /***************************************************************************
@@ -39,22 +39,29 @@ module.exports.routes = {
   'get /login': function (req, res) {
     res.view('login/register', {
       layout: 'empty',
-      user:'',
-      title:'登录页面',
+      user: '',
+      title: '登录页面',
     });
   },
-  // 'get /login': {
-  //   view: 'login/register',
-  //   locals: {
-  //     layout: ''
-  //   }
-  // },
-  'post /login': 'AuthController.processLogin',
+  'post /login': {
+    controller: 'AuthController',
+    action: 'processLogin',
+  },
   '/logout': {
     controller: 'AuthController',
     action: 'logout',
   },
-  // 用户创建
+
+  // 菜单管理
+  'get /menus': {
+    controller: 'MenuController',
+    action: 'menuList',
+  },
+  'post /menus': {
+    controller: 'MenuController',
+    action: 'createRole',
+  },
+  // 用户管理
   'get /createUser': {
     controller: 'SysUserController',
     action: 'createUserView',
@@ -63,7 +70,15 @@ module.exports.routes = {
     controller: 'SysUserController',
     action: 'createUser',
   },
-  // 角色创建
+  // 权限管理
+  'get /rolelist': {
+    controller: 'RoleController',
+    action: 'roleList',
+  },
+  'get /role/roleDetail/:id': {
+    controller: 'RoleController',
+    action: 'roleDetail',
+  },
   'get /createRole': {
     controller: 'RoleController',
     action: 'createRoleView',
@@ -72,7 +87,6 @@ module.exports.routes = {
     controller: 'RoleController',
     action: 'createRole',
   },
-
   /***************************************************************************
    *                                                                          *
    * Custom routes here...                                                    *

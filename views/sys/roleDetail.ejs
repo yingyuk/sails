@@ -1,0 +1,13 @@
+组名: <%= role.name %>
+成员:
+<% for(var i in role.user ){ %>
+ <%= role.user[i].name %>
+<% } %>
+菜单:
+<% for(var i in role.menus ){ %>
+ <%= role.menus[i].name %>
+<% } %>
+权限:
+<% for(var i in role.permissions ){ %>
+ <%= role.permissions[i].name %>
+<% } %>

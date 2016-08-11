@@ -1,0 +1,14 @@
+<a href="/createRole">创建新分组</a>
+我创建的组:
+  <% for(var i in roles ){ %>
+    <% if(roles[i].createUid = user.id){ %>
+    <a href="/role/roleDetail/<%= roles[i].id %>"><%= roles[i].name %></a>
+    <% } %>
+  <% } %>
+
+  其他组:
+  <% for(var i in roles ){ %>
+    <% if(roles[i].createUid != user.id){ %>
+    <a href="/role/roleDetail/<%= roles[i].id %>"><%= roles[i].name %></a>
+    <% } %>
+  <% } %>

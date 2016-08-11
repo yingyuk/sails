@@ -11,6 +11,9 @@ module.exports = {
     name: {
       type: 'string'
     },
+    url: {
+      type: 'string',
+    },
     pid: {
       type: 'interger',
       model: 'menu',

@@ -4,7 +4,7 @@
  * @Email:  wuyingyucn@gmail.com
  * @Date:   2016-08-04 23:42:12
  * @Last Modified by:   yingyuk
- * @Last Modified time: 2016-08-10 17:49:26
+ * @Last Modified time: 2016-08-11 17:58:19
  * @Description:
  */
 'use strict';
@@ -27,6 +27,7 @@ module.exports = {
       };
       SysUser.findOne({
           id: userId,
+          select: ['id'],
         })
         .populate('role')
         .exec(function (err, user) {
@@ -89,31 +90,25 @@ module.exports = {
           return res.negotiate(err);
         }
         return res.redirect('/');
-      })
+      });
     });
   },
   // 侧边栏
   sideBar: function (req, res) {
-    let userId = req.session.user.id;
+    let session = req.session;
+    let userId = session.user.id;
+    sails.log('userId', userId);
     if (userId) {
       let data = {
         title: '首页',
-        user: {},
-        menus: [],
+        user: session.user,
+        menus: session.ability.menus,
+        permissions: session.ability.permissions,
       };
-      SysUser.findOne({
-          id: userId,
-          select: ['id', 'name'],
-        })
-        .then(function (user) {
-          data.user = user;
-          user.fetchMenu(function (err, menus) {
-            data.menus = menus;
-            res.view('homepage', data);
-          });
-        });
+      sails.log(data);
+      return res.view('homepage', data);
     } else {
       res.redirect('/login');
     }
-  }
+  },
 };

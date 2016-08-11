@@ -4,7 +4,7 @@
  * @Email:  wuyingyucn@gmail.com
  * @Date:   2016-08-02 23:34:13
  * @Last Modified by:   yingyuk
- * @Last Modified time: 2016-08-10 17:48:08
+ * @Last Modified time: 2016-08-11 22:57:45
  * @Description:
  */
 'use strict';
@@ -12,9 +12,9 @@
  * SysUser.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
- * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 var bcrypt = require('bcryptjs');
+let utility = require('../services/utility');
 module.exports = {
   attributes: {
     name: {
@@ -62,11 +62,9 @@ module.exports = {
               if (err) {
                 cb(err);
               }
-              permissions = groupBy('permissions', permissions);
-              sails.log('拥有的权限', permissions);
+              permissions = utility.groupBy('permissions', permissions);
               for (let i in permissions) {
                 if (permissions[i].name === permission) {
-                  sails.log('permissions[i].name === permission', permissions[i].name === permission);
                   return cb(null, true);
                 }
               }
@@ -87,13 +85,12 @@ module.exports = {
         role.save(cb);
       });
     },
-    // 菜单展示
-    fetchMenu: function (cb) {
+    // 菜单,权限 获取;
+    fetchAbility: function (cb) {
       this.validatePermission('菜单浏览', function (err, status) {
         if (err) {
           cb(err);
         }
-        sails.log('权限', status);
         if (!status) {
           return [];
         }
@@ -108,12 +105,23 @@ module.exports = {
           });
           Role.find({
             id: roleIds,
-          }).populate(['menus']).exec(function (err, role) {
+          }).populate(['menus', 'permissions']).exec(function (err, role) {
             if (err) {
               return cb(err);
             }
-            sails.log('权限', groupBy('menus', role));
-            return cb(null, groupBy('menus', role));
+            let menus = utility.groupBy('menus', role);
+            let superManager = false;
+            if (role.some(function (item) {
+                return item.name === '超级管理员' ? true : false;
+              })) {
+              superManager = true;
+            }
+            let data = {
+              superManager: superManager,
+              menus: menus,
+              permissions: utility.groupBy('permissions', role),
+            };
+            return cb(null, data);
           });
         }).catch(function (err) {
           return cb(err);
@@ -127,15 +135,15 @@ module.exports = {
           return cb(err);
         }
         return cb(null, isMatch);
-      })
+      });
     },
     fetchRole: function (cb) {
       SysUser.findOne({
           id: this.id,
+          select: ['id'],
         }).populate('role')
         .exec(function (err, user) {
-          sails.log('populate', err, user);
-          return cb(err, user.role);
+          return cb(utility.groupBy('role', user));
         });
     },
     // 获取权限
@@ -171,7 +179,6 @@ module.exports = {
 
               data.menus = role.menus;
               data.permissions = role.permissions;
-              sails.log('查询结果', data);
               cb(null, data);
             });
         });
@@ -193,19 +200,3 @@ module.exports = {
     });
   },
 };
-
-function groupBy(name, obj) {
-  'use strict';
-  let cache = {};
-  let resultArr = [];
-  for (let i in obj) {
-    for (let j in obj[i][name]) {
-      let id = (obj[i][name][j].id);
-      if (!!id && !cache[id]) {
-        cache[id] = true;
-        resultArr.push((obj[i][name][j]));
-      }
-    }
-  }
-  return resultArr;
-}
